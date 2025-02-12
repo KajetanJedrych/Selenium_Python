@@ -8,11 +8,21 @@ from pages.dynamic_loading_page import DynamicLoadingPage
 from pages.file_upload_page import FileUploadPage
 from pages.javascript_alerts_page import JavaScriptAlertsPage
 from pages.drag_and_drop_page import DragAndDropPage
+from webdriver_manager.firefox import GeckoDriverManager
+from selenium.webdriver.firefox.service import Service as FirefoxService
+from selenium.webdriver.chrome.service import Service as ChromeService
+
+
 
 @pytest.fixture
-def driver():
-    service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service)
+def driver(request):
+    if request.param == "chrome":
+        service = ChromeService(ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service)
+    elif request.param == "firefox":
+        service = FirefoxService(GeckoDriverManager().install())
+        driver = webdriver.Firefox(service=service)
+    
     driver.maximize_window()
     yield driver
     driver.quit()
