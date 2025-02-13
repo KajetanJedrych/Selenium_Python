@@ -11,17 +11,27 @@ from pages.drag_and_drop_page import DragAndDropPage
 from webdriver_manager.firefox import GeckoDriverManager
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
 
 
-@pytest.fixture
+
+@pytest.fixture(params=["chrome", "firefox"])  
 def driver(request):
-    if request.param == "chrome":
+    browser = request.param  # Correct way to access parameterized fixture values
+
+    if browser == "chrome":
+        chrome_options = ChromeOptions()
+        chrome_options.add_argument("--headless")  # ✅ Enable headless mode
+        chrome_options.add_argument("--disable-gpu")
         service = ChromeService(ChromeDriverManager().install())
-        driver = webdriver.Chrome(service=service)
-    elif request.param == "firefox":
+        driver = webdriver.Chrome(service=service, options=chrome_options)
+    elif browser == "firefox":
+        firefox_options = FirefoxOptions()
+        firefox_options.add_argument("--headless") 
         service = FirefoxService(GeckoDriverManager().install())
-        driver = webdriver.Firefox(service=service)
+        driver = webdriver.Firefox(service=service, options=firefox_options)
     
     driver.maximize_window()
     yield driver
