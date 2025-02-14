@@ -52,6 +52,14 @@ class TestInternet:
         login_page.login("invalidUser", "invalidPassword")
         assert "Your username is invalid!" in login_page.get_error_message()
 
+    def test_simple_click(self, driver):
+        dynamic_page = DynamicLoadingPage(driver)
+        dynamic_page.navigate_to(self.BASE_URL)
+        dynamic_page.go_to_dynamic_loading()
+        dynamic_page.select_example2()
+        dynamic_page.click_start()
+        assert dynamic_page.get_loading_message() == "Hello World!"
+
     def test_dynamic_loading(self, driver):
         dynamic_page = DynamicLoadingPage(driver)
         dynamic_page.navigate_to(self.BASE_URL)
@@ -59,6 +67,15 @@ class TestInternet:
         dynamic_page.select_example2()
         dynamic_page.click_start()
         assert dynamic_page.get_loading_message() == "Hello World!"
+    
+    def test_shadow_Dom(self, driver):
+        dynamic_page = DynamicLoadingPage(driver)
+        dynamic_page.navigate_to(self.BASE_URL)
+        dynamic_page.go_to_dynamic_loading()
+        dynamic_page.select_example2()
+        dynamic_page.click_start()
+        assert dynamic_page.get_loading_message() == "Hello World!"
+
 
     def test_file_upload(self, driver):
         file_page = FileUploadPage(driver)
@@ -82,6 +99,14 @@ class TestInternet:
         prompt_text = "I am a JS Confirm"
         alerts_page.trigger_prompt(prompt_text)
         assert f"You entered: {prompt_text}" in alerts_page.get_result_text()
+
+    def test_static_elements(self, driver):
+        dynamic_page = DynamicLoadingPage(driver)
+        dynamic_page.navigate_to(self.BASE_URL)
+        dynamic_page.go_to_dynamic_loading()
+        dynamic_page.select_example2()
+        dynamic_page.click_start()
+        assert dynamic_page.get_loading_message() == "Hello World!"    
 
     def test_drag_and_drop(self, driver):
         drag_drop_page = DragAndDropPage(driver)
